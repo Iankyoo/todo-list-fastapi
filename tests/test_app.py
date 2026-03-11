@@ -2,8 +2,21 @@ from dataclasses import asdict
 from http import HTTPStatus
 
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 
+from fast_zero.database import get_session
 from fast_zero.models import User
+from fast_zero.schemas import UserPublic
+
+
+def test_get_session():
+    generator = get_session()
+
+    session = next(generator)
+
+    assert isinstance(session, Session)
+
+    generator.close()
 
 
 def test_root_deve_retornar_ok_e_ola_mundo(client):
@@ -31,43 +44,62 @@ def test_create_user_via_api(client):
     }
 
 
+def test_create_username_already_exists(client, user):
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'Ian',
+            'email': 'kyo@gmail.com',
+            'password': 'secret'
+        }
+    )
+
+    assert response.status_code == HTTPStatus.CONFLICT
+    assert response.json() == {
+        'detail': 'Username already exists'
+    }
+
+
+def test_create_email_already_exists(client, user):
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'Kyo',
+            'email': 'contato.iankyoo@gmail.com',
+            'password': 'secret'
+        }
+    )
+
+    assert response.status_code == HTTPStatus.CONFLICT
+    assert response.json() == {
+        'detail': 'Email already exists'
+    }
+
+
 def test_read_users(client):
     response = client.get('/users/')
 
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {
-        'users': [{'username': 'alice', 'email': 'alice@exemple.com', 'id': 1}]
-    }
+    assert response.json() == {'users': []}
 
 
-def test_read_user_id(client):
-    response = client.get('/users/1')
+def test_read_users_with_users(client, user):
+    user_schema = UserPublic.model_validate(user).model_dump()
+    response = client.get('/users/')
 
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {
-        'username': 'alice',
-        'email': 'alice@exemple.com',
-        'id': 1,
-    }
+    assert response.json() == {'users': [user_schema]}
 
 
-def test_read_user_id_not_found(client):
-    response = client.get('/users/666')
-
-    assert response.status_code == HTTPStatus.NOT_FOUND
-    assert response.json() == {'detail': 'User not found'}
-
-
-def test_update_users(client):
+def test_update_user(client, user):
     response = client.put(
         '/users/1',
         json={
             'username': 'bob',
             'email': 'bob@example.com',
-            'password': 'secret',
+            'password': 'mynewpassword',
         },
     )
-
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
         'username': 'bob',
@@ -90,11 +122,34 @@ def test_update_user_not_found(client):
     assert response.json() == {'detail': 'User not found'}
 
 
-def test_delete_user(client):
+def test_update_integrity_error(client, user):
+    client.post(
+        '/users/',
+        json={
+            'username': 'fausto',
+            'email': 'fausto@fausto.com',
+            'password': 'secret',
+        },
+    )
+
+    response = client.put(
+        '/users/1',
+        json={
+            'username': 'fausto',
+            'email': 'new@exemple.com',
+            'password': 'secret',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.CONFLICT
+    assert response.json() == {'detail': 'Username or Email already exists'}
+
+
+def test_delete_user(client, user):
     response = client.delete('/users/1')
 
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {'message': 'User deleted'}
+    assert response.json() == {'message': 'User has been deleted'}
 
 
 def test_delete_user_not_found(client):
@@ -116,6 +171,7 @@ def test_create_user(session, mock_db_time):
         new_user = User('test', 'test@test', 'secret')
         session.add(new_user)
         session.commit()
+
         user = session.scalar(select(User).where(User.username == 'test'))
 
         assert asdict(user) == {
