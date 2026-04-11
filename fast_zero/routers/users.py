@@ -1,9 +1,8 @@
 from http import HTTPStatus
-from operator import or_
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -84,13 +83,12 @@ async def update_user(
         current_user.email = user.email
         current_user.password = get_password_hash(user.password)
 
-        session.flush()
         await session.commit()
         await session.refresh(current_user)
 
         return current_user
     except IntegrityError:
-        session.rollback()
+        await session.rollback()
         raise HTTPException(
             status_code=HTTPStatus.CONFLICT,
             detail='Username or Email already exists',

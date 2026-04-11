@@ -26,7 +26,7 @@ def test_create_username_already_exists(client, user):
     response = client.post(
         '/users/',
         json={
-            'username': 'Ian',
+            'username': user.username,
             'email': 'kyo@gmail.com',
             'password': 'secret',
         },
@@ -41,7 +41,7 @@ def test_create_email_already_exists(client, user):
         '/users/',
         json={
             'username': 'Kyo',
-            'email': 'contato.iankyoo@gmail.com',
+            'email': user.email,
             'password': 'secret',
         },
     )
@@ -144,7 +144,31 @@ def test_read_user_with_id(client, user):
 
 
 def test_read_user_with_id_should_return_404_not_found(client, user):
-    response = client.get('/users/2')
+    response = client.get('/users/987')
 
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {'detail': 'User not found'}
+
+
+def test_update_user_with_wrong_user(client, other_user, token):
+    response = client.put(
+        f'/users/{other_user}',
+        headers={'Authorization': f'Bearer {token}'},
+        json={
+            'username': 'bob',
+            'email': 'bob@example.com',
+            'password': 'newsecret'
+        },
+    )
+    assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json() == {'detail': 'Not enough permissions'}
+
+
+def test_delete_user_with_wrong_user(client, other_user, token):
+    response = client.delete(
+        f'/users/{other_user}',
+        headers={'Authorization': f'Bearer {token}'}
+    )
+
+    assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json() == {'detail': 'Not enough permissions'}

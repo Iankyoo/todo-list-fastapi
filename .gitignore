@@ -1,8 +1,10 @@
-﻿.env
+.env
+database.db
 *.db
 __pycache__/
-.coverage
 *.pyc
+.coverage
+fast_zero/.coverage
 .pytest_cache/
 .ruff_cache/
 htmlcov/
