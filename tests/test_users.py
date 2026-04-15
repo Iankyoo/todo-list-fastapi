@@ -157,7 +157,7 @@ def test_update_user_with_wrong_user(client, other_user, token):
         json={
             'username': 'bob',
             'email': 'bob@example.com',
-            'password': 'newsecret'
+            'password': 'newsecret',
         },
     )
     assert response.status_code == HTTPStatus.FORBIDDEN
@@ -166,8 +166,7 @@ def test_update_user_with_wrong_user(client, other_user, token):
 
 def test_delete_user_with_wrong_user(client, other_user, token):
     response = client.delete(
-        f'/users/{other_user}',
-        headers={'Authorization': f'Bearer {token}'}
+        f'/users/{other_user}', headers={'Authorization': f'Bearer {token}'}
     )
 
     assert response.status_code == HTTPStatus.FORBIDDEN

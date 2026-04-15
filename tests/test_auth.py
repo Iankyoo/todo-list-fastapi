@@ -1,4 +1,3 @@
-from gc import freeze
 from http import HTTPStatus
 
 from freezegun import freeze_time
@@ -47,13 +46,14 @@ def test_token_expired_after_time(client, user):
 
 
 def test_get_current_user_no_subject(client):
-    token = encode({'payload_aleatorio': 'vazio'},
-                    settings.SECRET_KEY,
-                    algorithm=settings.ALGORITHM)
+    token = encode(
+        {'payload_aleatorio': 'vazio'},
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM,
+    )
 
     response = client.get(
-        '/users/',
-        headers={'Authorization': f'Bearer {token}'}
+        '/users/', headers={'Authorization': f'Bearer {token}'}
     )
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
@@ -65,8 +65,7 @@ def test_get_current_user_not_found(client):
     token = create_access_token(data={'sub': 'fantasma@email.com'})
 
     response = client.get(
-        '/users/',
-        headers={'Authorization': f'Bearer {token}'}
+        '/users/', headers={'Authorization': f'Bearer {token}'}
     )
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
@@ -75,8 +74,7 @@ def test_get_current_user_not_found(client):
 
 def test_refresh_token(client, token):
     response = client.post(
-        '/auth/refresh_token',
-        headers={'Authorization': f'Bearer {token}'}
+        '/auth/refresh_token', headers={'Authorization': f'Bearer {token}'}
     )
 
     data = response.json()
@@ -91,15 +89,14 @@ def test_token_expired_dont_refresh(client, user):
     with freeze_time('2025-12-31 12:00:00'):
         response = client.post(
             '/auth/token',
-            data={'username': user.email, 'password': user.clean_password}
+            data={'username': user.email, 'password': user.clean_password},
         )
         assert response.status_code == HTTPStatus.OK
         token = response.json()['access_token']
 
     with freeze_time('2025-12-31 12:31:00'):
         response = client.post(
-            '/auth/refresh_token',
-            headers={'Authorization': f'Bearer {token}'}
+            '/auth/refresh_token', headers={'Authorization': f'Bearer {token}'}
         )
         assert response.status_code == HTTPStatus.UNAUTHORIZED
         assert response.json() == {'detail': 'Could not validate credentials'}
