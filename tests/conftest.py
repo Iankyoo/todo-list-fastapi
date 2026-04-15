@@ -53,6 +53,7 @@ def _mock_db_time(*, model, time=None):
     def hook_time_db(mapper, connection, target):
         if hasattr(target, 'created_at'):
             target.created_at = time
+            target.updated_at = time
 
     event.listen(model, 'before_insert', hook_time_db)
 
