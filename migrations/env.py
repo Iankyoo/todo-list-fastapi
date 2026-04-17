@@ -5,15 +5,23 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 import asyncio
+import asyncio
+import sys
+
+if sys.platform.startswith("win"):
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 from alembic import context
 from fast_zero.settings import Settings
 from fast_zero.models import table_registry
-
+settings = Settings()
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-config.set_main_option('sqlalchemy.url', Settings().DATABASE_URL)
-
+config.set_main_option(
+    "sqlalchemy.url",
+    "postgresql+asyncpg://app_user:app_password@fastzero_database:5432/app_db"
+)
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:

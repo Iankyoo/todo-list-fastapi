@@ -34,7 +34,7 @@ def test_create_todo(client, token, mock_db_time):
             'description': 'test todo description',
             'state': 'draft',
             'created_at': time.isoformat(),
-            'updated_at': time.isoformat()
+            'updated_at': time.isoformat(),
         }
 
 
