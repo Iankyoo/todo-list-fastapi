@@ -4,13 +4,14 @@ ENV POETRY_VIRTUALENVS_CREATE=false
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y netcat
+RUN apt-get update && \
+    apt-get install -y netcat-openbsd 
 RUN pip install poetry
 
 COPY pyproject.toml poetry.lock ./
 
 RUN poetry config installer.max-workers 10
-RUN poetry install --no-interaction --no-ansi --without dev
+RUN poetry install --no-interaction --no-ansi --without dev --no-root
 
 COPY . .
 
