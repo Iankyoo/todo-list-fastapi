@@ -82,6 +82,8 @@ O ciclo de vida da aplicação é automatizado via GitHub Actions. Toda alteraç
 
 4. Após aprovação, realiza o deploy direto na infraestrutura do Fly.io.
 
+
+
 **Autor:**
 **Ian Kiyoshi Kobayashi** Estudante de Análise e Desenvolvimento de Sistemas (ADS) na Faculdade Impacta e aspirante a Engenheiro de Software.
 
