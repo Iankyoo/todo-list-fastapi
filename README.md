@@ -20,7 +20,7 @@ Autenticação e Autorização blindadas via **JWT (JSON Web Tokens)**, garantin
 * **Gestão de Todo-List:** CRUD completo com paginação e filtros dinâmicos por título, descrição e estado da tarefa.
 * **Persistência Relacional:** Modelagem de dados e migrações estruturadas com **SQLAlchemy 2.0** e **Alembic**, integrados ao **PostgreSQL**.
 
-## 🛠️ Stack Tecnológica
+## Stack Tecnológica
 
 **Back-end & Dados**
 * [FastAPI](https://fastapi.tiangolo.com/) - Framework web
@@ -36,7 +36,7 @@ Autenticação e Autorização blindadas via **JWT (JSON Web Tokens)**, garantin
 * [Pytest](https://docs.pytest.org/) & [Factory-boy](https://factoryboy.readthedocs.io/) - Framework de testes e mock de dados
 * [Poetry](https://python-poetry.org/) - Gerenciamento de dependências
 
-## 🚦 Como rodar o projeto localmente
+## Como rodar o projeto localmente
 
 ### Pré-requisitos
 Certifique-se de ter o Docker e o Docker Compose instalados.
@@ -64,8 +64,8 @@ O Docker Compose irá montar a imagem, subir o banco de dados e rodar as migraç
 4. **Acesse a API:**
 A documentação interativa (Swagger UI) estará disponível em: http://localhost:8000/docs
 
-**Testes e Cobertura**
-Para atestar a confiabilidade da API, execute os testes localmente via Poetry:       
+# Testes e Cobertura
+Para atestar a confiabilidade da API, execute os testes localmente via Poetry:
     ```bash
     poetry install poetry run task test
 
@@ -84,7 +84,7 @@ O ciclo de vida da aplicação é automatizado via GitHub Actions. Toda alteraç
 
 
 
-**Autor:**
+## Autor:
 **Ian Kiyoshi Kobayashi** Estudante de Análise e Desenvolvimento de Sistemas (ADS) na Faculdade Impacta e aspirante a Engenheiro de Software.
 
 Desenvolvido com foco na aplicação real de conceitos avançados de engenharia de software e infraestrutura em nuvem.
