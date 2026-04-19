@@ -13,8 +13,8 @@ Construída com uma arquitetura **100% assíncrona**, esta aplicação foca em e
 ## ✨ Principais Funcionalidades
 
 * **Arquitetura Assíncrona (Async):** Totalmente desenvolvida com rotinas não-bloqueantes (`async/await`) utilizando o driver `asyncpg` para máxima performance de I/O no banco de dados.
-* **Segurança Reforçada:** * Criptografia robusta de senhas (password hashing) utilizando **pwdlib**.
-  * Autenticação e Autorização blindadas via **JWT (JSON Web Tokens)**, garantindo isolamento de dados entre usuários.
+* **Segurança Reforçada:** Criptografia robusta de senhas (password hashing) utilizando **pwdlib**.
+Autenticação e Autorização blindadas via **JWT (JSON Web Tokens)**, garantindo isolamento de dados entre usuários.
 * **Qualidade de Código (100% de Cobertura):** Bateria de testes unitários e de integração exaustivos com **pytest**, cobrindo cada linha e cenário de falha da aplicação.
 * **Validação Rigorosa:** Tipagem estrita e validação automática de *payloads* de entrada e saída com **Pydantic**.
 * **Gestão de Todo-List:** CRUD completo com paginação e filtros dinâmicos por título, descrição e estado da tarefa.
