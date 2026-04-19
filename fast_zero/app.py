@@ -8,7 +8,7 @@ from fast_zero.routers import auth, todo, users
 
 from .schemas import Message
 
-if sys.platform == 'win32':
+if sys.platform == 'win32':    # pragma: no cover
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 app = FastAPI(title='Minha primeira API')
